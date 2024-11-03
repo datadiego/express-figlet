@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      font: monospace;
+      font-size: 18px;
+      background: blue;
+      color: yellow;
+      margin: 0;
+      padding: 0;
+    }
+    pre {
+      color: yellow;
+    }
+    body{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <pre id="resultado"></pre>
+
+  <script>
+    const resultado = document.querySelector('#resultado');
+    const text = "mipuff";  // Texto hardcodeado
+    const delay = 500
+    let fonts = [];
+    let currentFontIndex = 0;
+
+    // Fetch all fonts from /figlet/fonts
+    fetch('/figlet/fonts')
+      .then(response => response.json())
+      .then(data => {
+        fonts = data;
+        // Start changing the font every second
+        setInterval(changeFont, delay);
+      });
+
+    function changeFont() {
+      const font = fonts[currentFontIndex];
+      fetch(`/figlet?text=${text}&font=${font}`)
+        .then(response => response.text())
+        .then(data => {
+          resultado.textContent = data;
+        });
+
+      // Update the index to use the next font
+      currentFontIndex = (currentFontIndex + 1) % fonts.length;
+    }
+  </script>
+</body>
+</html>

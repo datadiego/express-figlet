@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *{
+      font: monospace;
+      background: black;
+      color: white;
+    }
+    pre{
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <input type="text" name="text" placeholder="Texto" required>
+    <button type="submit">Enviar</button>
+  </form>
+  <pre id="resultado"></pre>
+
+  <script>
+    const form = document.querySelector('form');
+    const resultado = document.querySelector('#resultado');
+
+    //fetch all fonts from /figlet/fonts
+    fetch('/figlet/fonts')
+      .then(response => response.json())
+      .then(data => {
+        //add a select element to the form
+        const select = document.createElement('select');
+        select.name = 'font';
+        form.prepend(select);
+
+        //add an option element for each font
+        data.forEach(font => {
+          const option = document.createElement('option');
+          option.value = font;
+          option.textContent = font;
+          select.appendChild(option);
+        });
+
+      });
+    document.querySelector('form').addEventListener('change', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const text = formData.get('text');
+      const font = formData.get('font');
+      fetch(`/figlet?text=${text}&font=${font}`)
+        .then(response => response.text())
+        .then(data => {
+          resultado.textContent = data;
+        });
+    });
+    document.querySelector('form input').addEventListener('input', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const text = formData.get('text');
+      const font = formData.get('font');
+      fetch(`/figlet?text=${text}&font=${font}`)
+        .then(response => response.text())
+        .then(data => {
+          resultado.textContent = data;
+        });
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const text = formData.get('text');
+      const font = formData.get('font');
+      fetch(`/figlet?text=${text}&font=${font}`)
+        .then(response => response.text())
+        .then(data => {
+          resultado.textContent = data;
+        });
+    });
+  </script>
+</body>
+</html>
