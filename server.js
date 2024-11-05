@@ -1,7 +1,9 @@
 const express = require('express');
+const express = require('morgan');
 const app = express();
 const port = 3000;
 
+app.use(morgan(':remote-addr :method :url :status :res[content-length] - :response-time ms'));
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
